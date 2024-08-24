@@ -1,0 +1,81 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Reminder',
+      home: ReminderScreen(),
+    );
+  }
+}
+
+class ReminderScreen extends StatefulWidget {
+  @override
+  _ReminderScreenState createState() => _ReminderScreenState();
+}
+
+class _ReminderScreenState extends State<ReminderScreen> {
+  final List<String> _reminders = [];
+  final TextEditingController _controller = TextEditingController();
+
+  void _addReminder() {
+    if (_controller.text.isNotEmpty) {
+      setState(() {
+        _reminders.add(_controller.text);
+      });
+      _controller.clear();
+    }
+  }
+
+  void _removeReminder(int index) {
+    setState(() {
+      _reminders.removeAt(index);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Reminder'),
+      ),
+      body: Column(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              controller: _controller,
+              decoration: InputDecoration(
+                labelText: 'Enter a reminder',
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: _addReminder,
+            child: Text('Add'),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: _reminders.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(_reminders[index]),
+                  trailing: IconButton(
+                    icon: Icon(Icons.delete),
+                    onPressed: () => _removeReminder(index),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
